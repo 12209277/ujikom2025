@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use Maatwebsite\Excel\Sheet;
 use App\Models\Sale;
 
 class SalesExport implements FromCollection, WithHeadings, WithMapping
@@ -26,7 +28,6 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
             'Total Harga',
             'Total Bayar',
             'Kembalian',
-            'Diskon',
             'Dibuat Oleh'
         ];
     }
@@ -43,24 +44,46 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
             $productData = [];
         }
 
-        $totalProductPrice = array_reduce($productData, function ($carry, $item) {
-            return $carry + ((float) $item['price'] * (int) $item['quantity']);
-        }, 0);
+        $productDataEncoded = json_encode($productData);
+        $products = json_decode($productDataEncoded, true);
 
-        $discount = $totalProductPrice - (float) $sale->total_amount;
+        $prettyProducts = 'Product | Quantity | Subtotal' . "\n";
+        foreach ($products as $product) {
+            $prettyProducts .= $product['name'] . ' | ' . $product['quantity'] . ' | ' . str_replace(',', '', str_replace('.', '', number_format($product['subtotal'], 0, ',', '.'))) . "\n";
+        }
 
         return [
             $id,
             $sale->invoice_number,
             $sale->customer_name,
             $sale->created_at->format('d-m-Y H:i'),
-            json_encode($productData, JSON_UNESCAPED_UNICODE),
-            'Rp ' . number_format($sale->total_amount, 0, ',', '.'),
-            'Rp ' . number_format($sale->payment_amount, 0, ',', '.'),
-            'Rp ' . number_format($sale->change_amount, 0, ',', '.'),
-            'Rp ' . number_format($discount, 0, ',', '.'),
+            $prettyProducts,
+            str_replace(',', '', str_replace('.', '', number_format($sale->total_amount, 0, ',', '.'))),
+            str_replace(',', '', str_replace('.', '', number_format($sale->payment_amount, 0, ',', '.'))),
+            str_replace(',', '', str_replace('.', '', number_format($sale->change_amount, 0, ',', '.'))),
             DB::table('users')->where('id', $sale->user_id)->value('name'),
         ];
     }
 
+    public function drawings()
+    {
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('Logo');
+        $drawing->setPath(public_path('img/avatar/avatar-1.png'));
+        $drawing->setHeight(50);
+        $drawing->setCoordinates('A1');
+
+        return $drawing;
+    }
+
+    public function title()
+    {
+        return 'Sales Report Toko Syams';
+    }
+
+    public function sheets(Sheet $sheet)
+    {
+        $sheet->autoSize();
+    }
 }

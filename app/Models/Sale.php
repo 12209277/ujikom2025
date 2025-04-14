@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class Sale extends Model
 {
@@ -24,7 +25,8 @@ class Sale extends Model
         'total_amount',
         'payment_amount',
         'change_amount',
-        'notes'
+        'notes',
+        'created_at'
     ];
 
     protected static function boot()

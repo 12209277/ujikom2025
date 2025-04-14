@@ -8,6 +8,7 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class SaleController extends Controller
 {
@@ -59,6 +60,7 @@ class SaleController extends Controller
         $totalPay = $request->input('total_pay');
         $totalAmount = $request->input('total_amount');
         $invoiceNumber = 'INV-' . strtoupper(Str::random(8));
+        $createdAt = Carbon::now()->timezone('Asia/Jakarta')->toDateTimeString();
 
         $memberName = $invoiceNumber;
         $memberId = null;
@@ -79,6 +81,8 @@ class SaleController extends Controller
         if ($request->use_point == 1) {
             $totalAmount = $totalAmount - $request->total_point;
             Member::where('id', $memberId)->decrement('points', $request->total_point);
+            $addPoint = $totalAmount / 750;
+            Member::where('id', $memberId)->increment('points', $addPoint);
         } else {
             $addPoint = $totalAmount / 750;
             Member::where('id', $memberId)->increment('points', $addPoint);
@@ -95,6 +99,8 @@ class SaleController extends Controller
             'payment_amount' => $totalPay,
             'change_amount' => $totalPay - $totalAmount,
             'notes' => '-',
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
         ]);
 
         foreach ($productData as $product) {
@@ -108,7 +114,7 @@ class SaleController extends Controller
             $discount = 0;
         }
 
-        return view('sales.invoice', compact('invoiceNumber', 'totalAmount', 'totalPay', 'memberName', 'memberId', 'productData', 'discount'));
+        return view('sales.invoice', compact('invoiceNumber', 'totalAmount', 'totalPay', 'memberName', 'memberId', 'productData', 'discount', 'createdAt'));
     }
 
     public function showInvoice($id)
