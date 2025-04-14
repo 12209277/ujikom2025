@@ -20,6 +20,7 @@ Auth::routes();
 Route::middleware(['authenticate'])->group(function () {
     // Home Route
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/chart-data', [HomeController::class, 'chartData'])->name('chart-data');
 
     // Product Route
     Route::resource('products', ProductController::class);
@@ -37,7 +38,7 @@ Route::middleware(['authenticate'])->group(function () {
         // User Route
         Route::resource('user', UserController::class);
 
-        Route::get('/sales/export', [SalesExportController::class, 'export'])->name('sales.export');
+        // Route::get('/sales/export', [SalesExportController::class, 'export'])->name('sales.export');
         Route::get('/sales/export/excel', function () {
             return Excel::download(new SalesExport, 'sales.xlsx');
         })->name('sales.export');        
