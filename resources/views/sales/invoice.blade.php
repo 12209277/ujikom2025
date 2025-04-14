@@ -1,28 +1,44 @@
 @extends('layouts.app')
-
+<?php 
+    use Carbon\Carbon;
+?>
 @section('title', 'Invoice Penjualan')
 
 @section('content')
 <div class="main-content-table">
-    <section class="section">
-        <div class="margin-content">
-            <div class="container-sm">
-                <div class="section-header text-center mb-4">
-                    <h1 class="fw-bold">Nomor Invoice: <strong>{{ $invoiceNumber }}</strong></h1>
-                </div>
-                <div class="invoice-container">
-                    <div class="card shadow-sm p-4">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
+<section class="section">
+    <div class="margin-content">
+        <div class="container-sm">
+            <div class="section-header text-center mb-4">
+                <h1 class="fw-bold">Nomor Invoice: <strong>{{ $invoiceNumber }}</strong></h1>
+            </div>
+            <div class="invoice-container">
+                <div class="card shadow-sm p-4">
+                    <div class="card-body">
+                            <div class="logo-container" style=" display: inline-block;
+                                vertical-align: top;
+                                margin-right: 20px;">
+                                <img style=" width: 150px;
+                                 margin-top: -40px;" src="{{ asset('img/logo-toko.jpg') }}" alt="" class="logo-image">
+                            </div>
+                            <div class="store-info" style="display: inline-block;
+                                vertical-align: top;">
+                                <h1 class="store-name" style="margin-top: 30px;
+                                font-size: 24px;">Toko Syams</h1>
+                                <p class="store-address" style=" font-size: 16px;">Jalan Siliwangi Nomor 10, Cicurug, Kab.Sukabumi, Jawa Barat</p>
+                            </div>
+                            <div class="invoice-info" style="display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;">
+                                <div class="invoice-details" style=" width: 50%;">
                                     <h5>Nomor Invoice: <strong>{{ $invoiceNumber }}</strong></h5>
-                                    <h5>Informasi Pelanggan</h5>
                                     <p><strong>Nama:</strong> {{ $memberName }}</p>
                                     <p><strong>Status:</strong> {{ $memberId ? 'Member' : 'Non-Member' }}</p>
                                 </div>
-                                <div class="col-md-6 text-md-end">
+                                <div class="transaction-date" style=" width: 50%;
+                                    text-align: left;">
                                     <h5>Tanggal Transaksi</h5>
-                                    <p>{{ $createdAt }}</p>
+                                    <p>{{ Carbon::parse($createdAt)->format('d F Y, H:i') }}</p>
                                 </div>
                             </div>
                             
@@ -51,10 +67,15 @@
                                 </table>
                             </div>
                             
-                            <div class="row mt-4">
-                                <div class="col-md-6">
+                            <div class="payment-info mt-4" style=" display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                margin-top: 40px;">
+                                <div class="payment-details" style=" width: 50%;">
                                     <p><strong>Total Pembayaran:</strong> Rp {{ number_format($totalPay, 0, ',', '.') }}</p>
                                     <p><strong>Total Belanja:</strong> Rp {{ number_format($totalAmount, 0, ',', '.') }}</p>
+                                </div>
+                                <div class="discount-info" style=" width: 50%;">
                                     @if($discount > 0)
                                     <p><strong>Total Potongan:</strong> Rp {{ number_format($discount, 0, ',', '.') }}</p>
                                     <p><strong>Total Setelah Potongan:</strong> Rp {{ number_format($totalAmount - $discount, 0, ',', '.') }}</p>
@@ -63,6 +84,14 @@
                                     <p><strong>Kembalian:</strong> Rp {{ number_format($totalPay - $totalAmount, 0, ',', '.') }}</p>
                                     @endif
                                 </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="text-center">
+                                <p><strong>Alamat Toko</strong></p>
+                                <p style="margin-top: -20px"><strong>Jalan Siliwangi Nomor 10, Cicurug, Kab.Sukabumi, Jawa Barat</strong></p>
+                                <p style="margin-top: -20px"><strong>Telepon: 08123456789</strong></p>
                             </div>
                             
                             <div class="text-center mt-4">

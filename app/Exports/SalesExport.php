@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Sheet;
 use App\Models\Sale;
 
 class SalesExport implements FromCollection, WithHeadings, WithMapping, WithTitle
@@ -23,8 +21,10 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, WithTitl
     }
 
     public function headings(): array
-    {
-        return [
+{
+    return [
+        ['Laporan Penjualan Toko Syams'],
+        [
             'No',
             'Nomor Invoice',
             'Nama Pelanggan',
@@ -34,8 +34,9 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping, WithTitl
             'Total Bayar',
             'Kembalian',
             'Dibuat Oleh'
-        ];
-    }
+        ]
+    ];
+}
 
     private static $counter = 1;
 
