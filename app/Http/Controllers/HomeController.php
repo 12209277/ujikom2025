@@ -24,33 +24,44 @@ class HomeController extends Controller
      */
     public function index()
     { 
-        return view('home');
+        $totalSalesToday = Sale::whereDate('created_at', Carbon::today())->sum('total_amount');
+
+        return view('home', compact('totalSalesToday'));
     }
 
     public function chartData()
     {
         $startDate = Carbon::now()->subDays(5);
         $endDate = Carbon::now();
-
+    
         $sales = Sale::whereBetween('created_at', [$startDate, $endDate])
             ->get();
-
+    
         $chartData = [
             'labels' => [],
             'datasets' => [
                 [
-                    'label' => 'Laba Penjualan Minggu Ini',
+                    'label' => 'Laba Penjualan 1 Minggu Kebelakang',
                     'data' => [],
                     'borderWidth' => 1
                 ]
             ]
         ];
-
+    
+        $dates = [];
         foreach ($sales as $sale) {
-            $chartData['labels'][] = $sale->created_at->format('Y-m-d');
-            $chartData['datasets'][0]['data'][] = $sale->total_amount;
+            $date = $sale->created_at->format('Y-m-d');
+            if (!isset($dates[$date])) {
+                $dates[$date] = 0;
+            }
+            $dates[$date] += $sale->total_amount;
         }
-
+    
+        foreach ($dates as $date => $total) {
+            $chartData['labels'][] = $date;
+            $chartData['datasets'][0]['data'][] = $total;
+        }
+    
         return response()->json($chartData);
     }
 }
