@@ -3096,6 +3096,9 @@ body.sidebar-mini .main-sidebar:after {
 body.sidebar-mini .main-sidebar .sidebar-brand {
   display: none;
 }
+body.sidebar-mini .main-sidebar .sidebar-brand a {
+  display: none;
+}
 body.sidebar-mini .main-sidebar .sidebar-brand-sm {
   display: block;
 }
@@ -3628,6 +3631,10 @@ body.layout-3 .main-wrapper {
   }
   .main-footer {
     padding-left: 30px;
+  }
+  .margin-content {
+    margin-top: 400px;
+    margin-left: 0px;
   }
   body.search-show {
     overflow: hidden;

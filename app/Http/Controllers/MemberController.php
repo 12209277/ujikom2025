@@ -12,12 +12,13 @@ class MemberController extends Controller
     {
         if ($request->has('search') && $request->search !== null) {
             $search = strtolower($request->search);
-            $members = Member::whereRaw('LOWER(name) LIKE ?', ['%'.$search.'%'])
-                ->orderByRaw('LOWER(name) ASC')
-                ->paginate(10)
-                ->appends($request->only('search'));
+            $members = Member::whereRaw('LOWER(member_code) LIKE ?', ['%'.$search.'%'])
+            ->orWhereRaw('LOWER(name) LIKE ?', ['%'.$search.'%'])
+            ->paginate(10)
+            ->appends($request->only('search'));
+        } else {
+            $members = Member::orderByRaw('LOWER(name) ASC')->paginate(10);
         }
-        $members = Member::latest()->paginate(10);
         return view('members.index', compact('members'));
     }
 
