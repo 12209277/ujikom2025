@@ -8,7 +8,7 @@
     <div class="margin-content">
         <div class="container-sm">
             <div class="section-header text-center mb-4">
-                <h1 class="fw-bold">Nomor Invoice: <strong>{{ $invoiceNumber }}</strong></h1>
+                <h1 class="fw-bold">Nomor Struk: <strong>{{ $invoiceNumber }}</strong></h1>
             </div>
             <div class="invoice-container">
                 <div class="card shadow-sm p-4">
@@ -29,7 +29,7 @@
                                 justify-content: space-between;
                                 align-items: flex-start;">
                                 <div class="invoice-details" style=" width: 50%;">
-                                    <h5>Nomor Invoice: <strong>{{ $invoiceNumber }}</strong></h5>
+                                    <h5>Nomor Struk: <strong>{{ $invoiceNumber }}</strong></h5>
                                     <p><strong>Nama:</strong> {{ $memberName }}</p>
                                     <p><strong>Status:</strong> {{ $memberId ? 'Member' : 'Non-Member' }}</p>
                                 </div>
@@ -94,7 +94,7 @@
                             
                             <div class="text-center mt-4">
                                 <a href="{{ route('sales.index') }}" class="btn btn-primary">Kembali ke Penjualan</a>
-                                <button class="btn btn-success" onclick="window.print()">Cetak Invoice</button>
+                                <button class="btn btn-success" onclick="window.print()">Cetak Struk</button>
                             </div>
                         </div>
                     </div>
