@@ -14,9 +14,17 @@
                     <div class="card shadow-sm p-4">
                         <div class="card-body">
                             <div class="row">
+                                <div class="col-md-2">
+                                    <img src="{{ asset('img/logo-toko.jpg') }}" alt="" style="width: 150px; margin-top: -40px">
+                                </div>
+                                <div class="col-md-6">
+                                    <h1 style="margin-top: 30px;">Toko Syams</h1>
+                                    <p>Jalan Siliwangi Nomor 10, Cicurug, Kab.Sukabumi, Jawa Barat</p>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <h5>Nomor Invoice: <strong>{{ $invoiceNumber }}</strong></h5>
-                                    <h5>Informasi Pelanggan</h5>
                                     <p><strong>Nama:</strong> {{ $memberName }}</p>
                                     <p><strong>Status:</strong> {{ $memberId ? 'Member' : 'Non-Member' }}</p>
                                 </div>
@@ -52,9 +60,11 @@
                             </div>
                             
                             <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <p><strong>Total Pembayaran:</strong> Rp {{ number_format($totalPay, 0, ',', '.') }}</p>
-                                    <p><strong>Total Belanja:</strong> Rp {{ number_format($totalAmount, 0, ',', '.') }}</p>
+                            <div class="col-md-6">
+                                <p><strong>Total Pembayaran:</strong> Rp {{ number_format($totalPay, 0, ',', '.') }}</p>
+                                <p><strong>Total Belanja:</strong> Rp {{ number_format($totalAmount, 0, ',', '.') }}</p>
+                            </div>
+                            <div class="col-md-6">
                                     @if($discount > 0)
                                     <p><strong>Total Potongan:</strong> Rp {{ number_format($discount, 0, ',', '.') }}</p>
                                     <p><strong>Total Setelah Potongan:</strong> Rp {{ number_format($totalAmount - $discount, 0, ',', '.') }}</p>
@@ -64,6 +74,12 @@
                                     @endif
                                 </div>
                             </div>
+
+                                <div class="text-center">
+                                    <p><strong>Alamat Toko</strong></p>
+                                    <p style="margin-top: -20px"><strong>Jalan Siliwangi Nomor 10, Cicurug, Kab.Sukabumi, Jawa Barat</strong></p>
+                                    <p style="margin-top: -20px"><strong>Telepon: 08123456789</strong></p>
+                                </div>
                             
                             <div class="text-center mt-4">
                                 <a href="{{ route('sales.index') }}" class="btn btn-primary">Kembali ke Penjualan</a>

@@ -7,14 +7,19 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithDrawings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Sheet;
 use App\Models\Sale;
 
-class SalesExport implements FromCollection, WithHeadings, WithMapping
+class SalesExport implements FromCollection, WithHeadings, WithMapping, WithTitle
 {
     public function collection()
     {
         return Sale::all();
+    }
+    public function title(): string
+    {
+        return 'Laporan Penjualan Toko Syams';
     }
 
     public function headings(): array
@@ -47,9 +52,9 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
         $productDataEncoded = json_encode($productData);
         $products = json_decode($productDataEncoded, true);
 
-        $prettyProducts = 'Product | Quantity | Subtotal' . "\n";
+        $prettyProducts = 'Product | Quantity | Subtotal |' . "\n";
         foreach ($products as $product) {
-            $prettyProducts .= $product['name'] . ' | ' . $product['quantity'] . ' | ' . str_replace(',', '', str_replace('.', '', number_format($product['subtotal'], 0, ',', '.'))) . "\n";
+            $prettyProducts .= $product['name'] . ' | ' . $product['quantity'] . ' | ' . str_replace(',', '', str_replace('.', '', number_format($product['subtotal'], 0, ',', '.'))) . ' | ' . "\n";
         }
 
         return [
@@ -63,27 +68,5 @@ class SalesExport implements FromCollection, WithHeadings, WithMapping
             str_replace(',', '', str_replace('.', '', number_format($sale->change_amount, 0, ',', '.'))),
             DB::table('users')->where('id', $sale->user_id)->value('name'),
         ];
-    }
-
-    public function drawings()
-    {
-        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        $drawing->setName('Logo');
-        $drawing->setDescription('Logo');
-        $drawing->setPath(public_path('img/avatar/avatar-1.png'));
-        $drawing->setHeight(50);
-        $drawing->setCoordinates('A1');
-
-        return $drawing;
-    }
-
-    public function title()
-    {
-        return 'Sales Report Toko Syams';
-    }
-
-    public function sheets(Sheet $sheet)
-    {
-        $sheet->autoSize();
     }
 }
