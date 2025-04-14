@@ -16,6 +16,8 @@ class SaleController extends Controller
         if($request->has('search') && $request->search !== null) {
             $search = strtolower($request->search);
             $sales = Sale::whereRaw('LOWER(invoice_number) LIKE ?', ['%'.$search.'%'])
+                ->orWhereRaw('LOWER(customer_name) LIKE ?', ['%'.$search.'%'])
+                ->orderByRaw('LOWER(invoice_number) ASC')
                 ->paginate(10)
                 ->appends($request->only('search'));
         } else {
