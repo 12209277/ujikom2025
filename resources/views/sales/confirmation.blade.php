@@ -83,8 +83,9 @@
 
                                         <div class="form-group mb-3">
                                             <label for="total_pay">Jumlah Bayar</label>
-                                            <input type="text" class="form-control" id="total_pay" value="">
+                                            <input type="text" class="form-control" id="total_pay" name="total_pay_display">
                                             <input type="hidden" id="total_pay_numeric" name="total_pay">
+                                            <span id="error-message" style="color: red;"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -121,18 +122,45 @@
         });
 
         $('#total_pay').on('input', function() {
-            let value = $(this).val().replace(/\D/g, '');
-            $('#total_pay_numeric').val(value);
-            if (value) {
-                $(this).val(formatRupiah(value));
-            } else {
-                $(this).val('');
-            }
-        });
+    let totalPay = $(this).val().replace(/\D/g, '');
+    let totalAmount = {{ $totalAmount }};
 
-        $('form').on('submit', function() {
-            let totalPay = $('#total_pay').val().replace(/\D/g, '');
-            $('#total_pay_numeric').val(totalPay);
+    if (totalPay < totalAmount) {
+        $('#error-message').text('Jumlah bayar harus lebih besar atau sama dengan total');
+        $('button[type="submit"]').prop('disabled', true);
+    } else {
+        $('#error-message').text('');
+        $('button[type="submit"]').prop('disabled', false);
+    }
+
+    $(this).val(formatRupiah(totalPay));
+    $('#total_pay_numeric').val(totalPay);
+});
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+        $('form').validate({
+            rules: {
+                total_pay: {
+                    required: true,
+                    min: {{ $totalAmount }}
+                }
+            },
+            messages: {
+                total_pay: {
+                    required: 'Jumlah bayar harus diisi',
+                    min: 'Jumlah bayar harus lebih besar atau sama dengan total'
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo($('#error-message'));
+            },
+            submitHandler: function(form) {
+                if ($(form).valid()) {
+                    form.submit();
+                }
+            }
         });
 
         function formatRupiah(angka) {
